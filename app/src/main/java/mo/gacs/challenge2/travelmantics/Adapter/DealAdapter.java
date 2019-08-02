@@ -1,6 +1,8 @@
 package mo.gacs.challenge2.travelmantics.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -18,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+import mo.gacs.challenge2.travelmantics.Activities.AdminActivity;
+import mo.gacs.challenge2.travelmantics.Activities.ListActivity;
 import mo.gacs.challenge2.travelmantics.FirebaseUtil;
 import mo.gacs.challenge2.travelmantics.Models.TravelDeal;
 import mo.gacs.challenge2.travelmantics.R;
@@ -31,10 +36,11 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private ChildEventListener mChildListener;
+    public static String Deal_KEY="Deal";
 
 
-    public DealAdapter() {
-        FirebaseUtil.openFbReference(MainRef);
+    public DealAdapter(ListActivity caller) {
+        FirebaseUtil.openFbReference(MainRef, caller);
         mFirebaseDatabase=FirebaseUtil.mFirebaseDatabase;
         mDatabaseReference=FirebaseUtil.mDatabaseReference;
         deals=FirebaseUtil.mDeals;
@@ -91,17 +97,37 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
         return deals.size();
     }
 
-    public class DealViewHolder extends RecyclerView.ViewHolder {
+    public class DealViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        TextView tvDescription;
+        TextView tvPrice;
+        ImageView imageDeal;
         TextView tvTitle;
 
         public DealViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle=(TextView)itemView.findViewById(R.id.tvTitle);
+            tvDescription=(TextView)itemView.findViewById(R.id.tvDescription);
+            tvPrice=(TextView)itemView.findViewById(R.id.tvPrice);
+            imageDeal=(ImageView)itemView.findViewById(R.id.imageDeal);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(TravelDeal travelDeal){
             tvTitle.setText(travelDeal.getTitle());
+            tvDescription.setText(travelDeal.getDescription());
+            tvPrice.setText(travelDeal.getPrice());
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position=getAdapterPosition();
+            Log.d("Click:", String.valueOf(position));
+            TravelDeal selectedDeal=deals.get(position);
+            Intent intent=new Intent(v.getContext(), AdminActivity.class);
+            intent.putExtra(Deal_KEY,selectedDeal);
+            v.getContext().startActivity(intent);
         }
     }
 }

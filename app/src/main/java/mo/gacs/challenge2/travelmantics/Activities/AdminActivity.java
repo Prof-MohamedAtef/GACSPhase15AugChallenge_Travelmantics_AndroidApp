@@ -1,5 +1,6 @@
 package mo.gacs.challenge2.travelmantics.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +18,8 @@ import mo.gacs.challenge2.travelmantics.FirebaseUtil;
 import mo.gacs.challenge2.travelmantics.R;
 import mo.gacs.challenge2.travelmantics.Models.TravelDeal;
 
+import static mo.gacs.challenge2.travelmantics.Adapter.DealAdapter.Deal_KEY;
+
 public class AdminActivity extends AppCompatActivity {
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -31,6 +34,7 @@ public class AdminActivity extends AppCompatActivity {
 
     @BindView(R.id.EditDesc)
     EditText txtDescription;
+    private TravelDeal deal;
 
 
     @Override
@@ -39,9 +43,19 @@ public class AdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
         ButterKnife.bind(this);
 
-        FirebaseUtil.openFbReference(MainRef);
+//        FirebaseUtil.openFbReference(MainRef, this);
         mFirebaseDatabase=FirebaseUtil.mFirebaseDatabase;
         mDatabaseReference=FirebaseUtil.mDatabaseReference;
+
+        Intent intent=getIntent();
+        TravelDeal travelDeal=(TravelDeal)intent.getSerializableExtra(Deal_KEY);
+        if (travelDeal==null){
+            travelDeal=new TravelDeal();
+        }
+        this.deal=travelDeal;
+        txtTitle.setText(travelDeal.getTitle());
+        txtDescription.setText(travelDeal.getDescription());
+        txtPrice.setText(travelDeal.getPrice());
     }
 
     @Override
@@ -51,6 +65,12 @@ public class AdminActivity extends AppCompatActivity {
                 saveDeal();
                 Toast.makeText(getApplicationContext(), R.string.saved, Toast.LENGTH_LONG).show();
                 clean();
+                backToList();
+                return true;
+            case R.id.delete:
+                deleteDeal();
+                Toast.makeText(getApplicationContext(), R.string.deleted, Toast.LENGTH_LONG).show();
+                backToList();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -66,18 +86,48 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     private void saveDeal() {
-        String title= txtTitle.getText().toString();
-        String desc=txtDescription.getText().toString();
-        String price=txtPrice.getText().toString();
+        deal.setTitle( txtTitle.getText().toString());
+        deal.setDescription(txtDescription.getText().toString());
+        deal.setPrice(txtPrice.getText().toString());
+        if (deal.getId()==null){
+            mDatabaseReference.push().setValue(deal);
+        }else {
+            mDatabaseReference.child(deal.getId()).setValue(deal);
+        }
+    }
 
-        TravelDeal travelDeal=new TravelDeal(title, desc, price,"");
-        mDatabaseReference.push().setValue(travelDeal);
+    private void deleteDeal(){
+        if (deal==null){
+            Toast.makeText(getApplicationContext(), getString(R.string.save_before_del), Toast.LENGTH_LONG).show();
+            return;
+        }
+        mDatabaseReference.child(deal.getId()).removeValue();
+    }
+
+    private void backToList(){
+        Intent intent=new Intent(this, ListActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater=getMenuInflater();
         menuInflater.inflate(R.menu.save_menu, menu);
+        if (FirebaseUtil.isAdmin){
+            menu.findItem(R.id.delete).setVisible(true);
+            menu.findItem(R.id.save_menu).setVisible(true);
+            enableEditText(true);
+        }else {
+            menu.findItem(R.id.delete).setVisible(false);
+            menu.findItem(R.id.save_menu).setVisible(false);
+            enableEditText(false);
+        }
         return true;
+    }
+
+    private void enableEditText(boolean isEnabled){
+        txtTitle.setEnabled(isEnabled);
+        txtDescription.setEnabled(isEnabled);
+        txtPrice.setEnabled(isEnabled);
     }
 }

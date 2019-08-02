@@ -1,6 +1,8 @@
 package mo.gacs.challenge2.travelmantics.Models;
 
-public class TravelDeal {
+import java.io.Serializable;
+
+public class TravelDeal implements Serializable {
     private String id;
     private String title;
     private String price;
