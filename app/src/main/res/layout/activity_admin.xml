@@ -4,34 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".Activities.AdminActivity"
     android:orientation="vertical"
     android:padding="15dp"
     android:background="@color/offWhite">
 
     <EditText
-        android:textColorHint="@color/red"
+        android:textColorHint="@color/colorAccent"
         android:textStyle="bold"
         android:layout_margin="10dp"
         android:id="@+id/EditName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/description"
+        android:hint="@string/title"
         android:textColor="@color/black"
         />
     <EditText
-        android:textColorHint="@color/red"
+        android:textColorHint="@color/colorAccent"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:layout_margin="10dp"
         android:id="@+id/EditPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/description"
+        android:hint="@string/price"
         android:layout_below="@id/EditName"
         />
     <EditText
-        android:textColorHint="@color/red"
+        android:textColorHint="@color/colorAccent"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:layout_margin="10dp"
