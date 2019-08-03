@@ -30,6 +30,10 @@ import mo.gacs.challenge2.travelmantics.R;
 import static mo.gacs.challenge2.travelmantics.Activities.AdminActivity.MainRef;
 
 public class UserActivity extends AppCompatActivity {
+    private String KEY_POS="KEY_POS";
+    private LinearLayoutManager dealsLayouManager;
+    private int lastPos=0;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater=getMenuInflater();
@@ -60,11 +64,13 @@ public class UserActivity extends AppCompatActivity {
         FirebaseUtil.openFbReference(MainRef, this);
         final DealAdapter dealAdapter=new DealAdapter(this);
         rvDeals.setAdapter(dealAdapter);
-        LinearLayoutManager dealsLayouManager=
+        dealsLayouManager=
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvDeals.setLayoutManager(dealsLayouManager);
         FirebaseUtil.attachListener();
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -98,11 +104,23 @@ public class UserActivity extends AppCompatActivity {
     RecyclerView rvDeals;
 
     @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
+    }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState!=null){
+            lastPos=  savedInstanceState.getInt(KEY_POS);
+        }
     }
 
     public void showMenu(){
