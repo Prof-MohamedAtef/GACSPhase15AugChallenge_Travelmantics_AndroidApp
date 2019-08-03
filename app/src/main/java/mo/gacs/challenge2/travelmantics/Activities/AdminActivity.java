@@ -160,7 +160,6 @@ public class AdminActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     private boolean checkEnteredValues() {

@@ -43,7 +43,6 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
     public static String Deal_KEY="Deal";
     private String BACKGROUND_COLOR="#b4dce4";
     UserActivity activity;
-    private String FAKE_PATH=null;
 
 
     public DealAdapter(UserActivity caller) {
@@ -147,7 +146,6 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
                         .centerCrop()
                         .into(imageDeal);
             }else {
-                FAKE_PATH = "PlaPlaPla";
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     imageDeal.setBackground(imageDeal.getContext().getDrawable(R.drawable.bg_image));
                 } else {
