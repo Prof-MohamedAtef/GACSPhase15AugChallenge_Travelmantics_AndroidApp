@@ -1,8 +1,8 @@
 package mo.gacs.challenge2.travelmantics.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -18,16 +18,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import mo.gacs.challenge2.travelmantics.Activities.AdminActivity;
+import mo.gacs.challenge2.travelmantics.Activities.DealActivity;
 import mo.gacs.challenge2.travelmantics.Activities.ListActivity;
 import mo.gacs.challenge2.travelmantics.FirebaseUtil;
 import mo.gacs.challenge2.travelmantics.Models.TravelDeal;
 import mo.gacs.challenge2.travelmantics.R;
 
-import static mo.gacs.challenge2.travelmantics.Activities.AdminActivity.MainRef;
+import static mo.gacs.challenge2.travelmantics.Activities.DealActivity.MainRef;
 
 public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder>{
 
@@ -36,6 +37,7 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private ChildEventListener mChildListener;
+    private ImageView imageDeal;
     public static String Deal_KEY="Deal";
 
 
@@ -101,7 +103,6 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
 
         TextView tvDescription;
         TextView tvPrice;
-        ImageView imageDeal;
         TextView tvTitle;
 
         public DealViewHolder(@NonNull View itemView) {
@@ -111,13 +112,14 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
             tvPrice=(TextView)itemView.findViewById(R.id.tvPrice);
             imageDeal=(ImageView)itemView.findViewById(R.id.imageDeal);
             itemView.setOnClickListener(this);
+
         }
 
         public void bind(TravelDeal travelDeal){
             tvTitle.setText(travelDeal.getTitle());
             tvDescription.setText(travelDeal.getDescription());
             tvPrice.setText(travelDeal.getPrice());
-
+            showImage(travelDeal.getImageUrl());
         }
 
         @Override
@@ -125,9 +127,20 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
             int position=getAdapterPosition();
             Log.d("Click:", String.valueOf(position));
             TravelDeal selectedDeal=deals.get(position);
-            Intent intent=new Intent(v.getContext(), AdminActivity.class);
+            Intent intent=new Intent(v.getContext(), DealActivity.class);
             intent.putExtra(Deal_KEY,selectedDeal);
             v.getContext().startActivity(intent);
+        }
+
+        private void showImage(String url){
+            if (url!=null&&url.isEmpty()==false){
+                int width= Resources.getSystem().getDisplayMetrics().widthPixels;
+                Picasso.with(imageDeal.getContext())
+                        .load(url)
+                        .resize(160, 160)
+                        .centerCrop()
+                        .into(imageDeal);
+            }
         }
     }
 }

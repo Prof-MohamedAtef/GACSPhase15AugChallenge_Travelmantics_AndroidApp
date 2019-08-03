@@ -2,7 +2,6 @@ package mo.gacs.challenge2.travelmantics.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,14 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,7 +27,7 @@ import mo.gacs.challenge2.travelmantics.FirebaseUtil;
 import mo.gacs.challenge2.travelmantics.Models.TravelDeal;
 import mo.gacs.challenge2.travelmantics.R;
 
-import static mo.gacs.challenge2.travelmantics.Activities.AdminActivity.MainRef;
+import static mo.gacs.challenge2.travelmantics.Activities.DealActivity.MainRef;
 
 public class ListActivity extends AppCompatActivity {
     @Override
@@ -74,7 +70,7 @@ public class ListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.insert_menu:
-                Intent intent=new Intent(this, AdminActivity.class);
+                Intent intent=new Intent(this, DealActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logout_menu:

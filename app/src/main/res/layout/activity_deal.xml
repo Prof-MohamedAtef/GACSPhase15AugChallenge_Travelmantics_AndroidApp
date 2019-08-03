@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.AdminActivity"
+    tools:context=".Activities.DealActivity"
     android:orientation="vertical"
     android:padding="15dp"
     android:background="@color/offWhite">
@@ -41,6 +41,33 @@
         android:hint="@string/description"
         android:layout_below="@id/EditPrice"
         />
+
+    <LinearLayout
+        android:layout_margin="15dp"
+        android:padding="15dp"
+        android:orientation="vertical"
+        android:layout_below="@id/EditDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/BTNUpload"
+            android:text="@string/UploadImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <ImageView
+                android:scaleType="fitXY"
+                android:id="@+id/imageDealUpload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>
