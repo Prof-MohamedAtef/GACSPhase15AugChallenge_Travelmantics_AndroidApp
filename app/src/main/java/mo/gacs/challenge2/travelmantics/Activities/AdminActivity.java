@@ -115,11 +115,16 @@ public class AdminActivity extends AppCompatActivity {
         BTNUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType(IMAGE_TYPE);
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                startActivityForResult(intent.createChooser(intent,
-                        INTENT_TITLE),INTENT_REQUEST_CODE);
+                filled=checkEnteredValues();
+                if (filled) {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType(IMAGE_TYPE);
+                    intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                    startActivityForResult(intent.createChooser(intent,
+                            INTENT_TITLE), INTENT_REQUEST_CODE);
+                }else {
+                    Toast.makeText(getApplicationContext(), R.string.fill_first, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
