@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.ListActivity">
+    tools:context=".Activities.ListActivity"
+    android:padding="@dimen/text_margin_standard"
+    android:background="@color/black">
 
 
     <android.support.v7.widget.RecyclerView

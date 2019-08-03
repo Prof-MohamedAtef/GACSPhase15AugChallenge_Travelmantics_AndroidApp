@@ -7,4 +7,7 @@
     <color name="red">#FF3940</color>
     <color name="chocolate">#403231</color>
     <color name="offWhite">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="price_color">#b4dce4</color>
+
 </resources>

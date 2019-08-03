@@ -51,17 +51,21 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
         <Button
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:background="@color/red"
             android:id="@+id/BTNUpload"
             android:text="@string/UploadImage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_height="wrap_content" />
         <LinearLayout
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
             <ImageView
+                android:background="@drawable/black_stroke"
                 android:scaleType="fitXY"
                 android:id="@+id/imageDealUpload"
                 android:layout_width="match_parent"

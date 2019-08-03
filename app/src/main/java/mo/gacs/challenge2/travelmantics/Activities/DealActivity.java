@@ -50,18 +50,23 @@ public class DealActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==INTENT_REQUEST_CODE&&resultCode==RESULT_OK){
             Uri imageUri=data.getData();
-            StorageReference ref=FirebaseUtil.mStorageRef.child(imageUri.getLastPathSegment());
+            final StorageReference ref=FirebaseUtil.mStorageRef.child(imageUri.getLastPathSegment());
             ref.putFile(imageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    String Url=taskSnapshot.getUploadSessionUri().toString();
-                    String pictureName=taskSnapshot.getStorage().getPath();
-                    deal.setImageUrl(Url);
-                    deal.setImageName(pictureName);
-                    Log.d("Name", pictureName);
-                    Log.d("URL", Url);
-                    showImage(Url);
-
+                public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(DealActivity.this, getApplicationContext().getString(R.string.upload_success), Toast.LENGTH_LONG).show();
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String Url=uri.toString();
+                            String pictureName=taskSnapshot.getStorage().getPath();
+                            deal.setImageUrl(Url);
+                            deal.setImageName(pictureName);
+                            Log.d("Name", pictureName);
+                            Log.d("URL", Url);
+                            showImage(Url);
+                        }
+                    });
                 }
             });
         }

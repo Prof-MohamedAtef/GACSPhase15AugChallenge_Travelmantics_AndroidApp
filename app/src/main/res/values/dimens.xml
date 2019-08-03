@@ -3,4 +3,7 @@
     <dimen name="text_margin_standard">8dp</dimen>
     <dimen name="TitleLarge">24sp</dimen>
     <dimen name="PriceSize">18sp</dimen>
+    <dimen name="DescSize">21sp</dimen>
+    <dimen name="marginTop">20dp</dimen>
+    <dimen name="overalPadding">12dp</dimen>
 </resources>
