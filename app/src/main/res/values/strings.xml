@@ -13,4 +13,7 @@
     <string name="Logout">Log out</string>
     <string name="UploadImage">Upload Image</string>
     <string name="upload_success">Upload successful!</string>
+    <string name="write_permission_denied">Editing is not enabled!</string>
+    <string name="no_delete">You didn\'t select adeal to delete!</string>
+    <string name="fill_first">Please enter details firstly!</string>
 </resources>

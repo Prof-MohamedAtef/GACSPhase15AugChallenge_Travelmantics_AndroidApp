@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.DealActivity"
+    tools:context=".Activities.AdminActivity"
     android:orientation="vertical"
     android:padding="15dp"
     android:background="@color/offWhite">
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:background="@drawable/black_stroke"
+                android:src="@drawable/black_stroke"
                 android:scaleType="fitXY"
                 android:id="@+id/imageDealUpload"
                 android:layout_width="match_parent"

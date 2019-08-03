@@ -17,13 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.data.model.Resource;
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -36,7 +33,7 @@ import mo.gacs.challenge2.travelmantics.Models.TravelDeal;
 
 import static mo.gacs.challenge2.travelmantics.Adapter.DealAdapter.Deal_KEY;
 
-public class DealActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity {
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -44,6 +41,13 @@ public class DealActivity extends AppCompatActivity {
 
     @BindView(R.id.EditName)
     EditText txtTitle;
+    private String title;
+    private String description;
+    private String price;
+    private boolean filled;
+    private String KEY_TITLE="KEY_TITLE";
+    private String KEY_DESCRIP="KEY_DESCRIP";
+    private String KEY_PRICE="KEY_PRICE";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -54,7 +58,7 @@ public class DealActivity extends AppCompatActivity {
             ref.putFile(imageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(DealActivity.this, getApplicationContext().getString(R.string.upload_success), Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminActivity.this, getApplicationContext().getString(R.string.upload_success), Toast.LENGTH_LONG).show();
                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
@@ -93,22 +97,20 @@ public class DealActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_deal);
+        setContentView(R.layout.activity_admin);
         ButterKnife.bind(this);
 
 //        FirebaseUtil.openFbReference(MainRef, this);
         mFirebaseDatabase=FirebaseUtil.mFirebaseDatabase;
         mDatabaseReference=FirebaseUtil.mDatabaseReference;
-
         final Intent intent=getIntent();
         TravelDeal travelDeal=(TravelDeal)intent.getSerializableExtra(Deal_KEY);
         if (travelDeal==null){
             travelDeal=new TravelDeal();
         }
         this.deal=travelDeal;
-        txtTitle.setText(travelDeal.getTitle());
-        txtDescription.setText(travelDeal.getDescription());
-        txtPrice.setText(travelDeal.getPrice());
+        setData(this.deal);
+
         showImage(deal.getImageUrl());
         BTNUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,24 +124,49 @@ public class DealActivity extends AppCompatActivity {
         });
     }
 
+    private void setData(TravelDeal travelDeal) {
+        txtTitle.setText(travelDeal.getTitle());
+        txtDescription.setText(travelDeal.getDescription());
+        txtPrice.setText(travelDeal.getPrice());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_menu:
-                saveDeal();
-                Toast.makeText(getApplicationContext(), R.string.saved, Toast.LENGTH_LONG).show();
-                clean();
-                backToList();
+                filled= checkEnteredValues();
+                if (filled){
+                    saveDeal();
+                    clean();
+                    backToList();
+                }else {
+                    Toast.makeText(getApplicationContext(), R.string.fill_first, Toast.LENGTH_LONG).show();
+                }
                 return true;
             case R.id.delete:
-                deleteDeal();
-                Toast.makeText(getApplicationContext(), R.string.deleted, Toast.LENGTH_LONG).show();
-                backToList();
+                if (deal.getId()!=null&&deal.getId().isEmpty()==false){
+                    deleteDeal();
+                    Toast.makeText(getApplicationContext(), R.string.deleted, Toast.LENGTH_LONG).show();
+                    backToList();
+                }else {
+                    Toast.makeText(getApplicationContext(), R.string.no_delete, Toast.LENGTH_LONG).show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    private boolean checkEnteredValues() {
+        title=txtTitle.getText().toString();
+        description=txtDescription.getText().toString();
+        price=txtPrice.getText().toString();
+        if (title.length()>0&&description.length()>0&&price.length()>0){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     private void clean() {
@@ -150,42 +177,48 @@ public class DealActivity extends AppCompatActivity {
     }
 
     private void saveDeal() {
-        deal.setTitle( txtTitle.getText().toString());
-        deal.setDescription(txtDescription.getText().toString());
-        deal.setPrice(txtPrice.getText().toString());
-        if (deal.getId()==null){
+        deal.setTitle(title);
+        deal.setDescription(description);
+        deal.setPrice(price);
+        if (deal.getId() == null) {
             mDatabaseReference.push().setValue(deal);
-        }else {
+        } else {
             mDatabaseReference.child(deal.getId()).setValue(deal);
         }
+        Toast.makeText(getApplicationContext(), R.string.saved, Toast.LENGTH_LONG).show();
     }
 
     private void deleteDeal(){
         if (deal==null){
             Toast.makeText(getApplicationContext(), getString(R.string.save_before_del), Toast.LENGTH_LONG).show();
             return;
-        }
-        mDatabaseReference.child(deal.getId()).removeValue();
-        if (deal.getImageName()!=null&&deal.getImageName().isEmpty()==false){
-            StorageReference picRef= FirebaseUtil.mStorage.getReference().child(deal.getImageName());
-            picRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Log.d("Delete Image","Image Successfully Deleted!");
+        }else if (deal!=null){
+                if (deal.getId()!=null) {
+                    mDatabaseReference.child(deal.getId()).removeValue();
+                    if (deal.getImageName() != null && deal.getImageName().isEmpty() == false) {
+                        StorageReference picRef = FirebaseUtil.mStorage.getReference().child(deal.getImageName());
+                        picRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Delete Image", "Image Successfully Deleted!");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("Error!", e.getMessage());
+                            }
+                        });
+                    }
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("Error!",e.getMessage());
-                }
-            });
         }
     }
 
     private void backToList(){
-        Intent intent=new Intent(this, ListActivity.class);
+        Intent intent=new Intent(this, UserActivity.class);
         startActivity(intent);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -201,6 +234,7 @@ public class DealActivity extends AppCompatActivity {
             menu.findItem(R.id.save_menu).setVisible(false);
             enableEditText(false);
             BTNUpload.setEnabled(false);
+            BTNUpload.setText(getApplicationContext().getString(R.string.write_permission_denied));
         }
         return true;
     }

@@ -27,9 +27,9 @@ import mo.gacs.challenge2.travelmantics.FirebaseUtil;
 import mo.gacs.challenge2.travelmantics.Models.TravelDeal;
 import mo.gacs.challenge2.travelmantics.R;
 
-import static mo.gacs.challenge2.travelmantics.Activities.DealActivity.MainRef;
+import static mo.gacs.challenge2.travelmantics.Activities.AdminActivity.MainRef;
 
-public class ListActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater=getMenuInflater();
@@ -70,7 +70,7 @@ public class ListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.insert_menu:
-                Intent intent=new Intent(this, DealActivity.class);
+                Intent intent=new Intent(this, AdminActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.logout_menu:
@@ -100,7 +100,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
 
     }

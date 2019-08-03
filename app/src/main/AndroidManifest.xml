@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".Activities.ListActivity"
+        <activity android:name=".Activities.UserActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,8 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.DealActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".Activities.AdminActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Activities.UserActivity">
         </activity>
     </application>
 

@@ -1,10 +1,7 @@
 package mo.gacs.challenge2.travelmantics;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.telecom.Call;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -21,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import mo.gacs.challenge2.travelmantics.Activities.ListActivity;
+import mo.gacs.challenge2.travelmantics.Activities.UserActivity;
 import mo.gacs.challenge2.travelmantics.Models.TravelDeal;
 
 public class FirebaseUtil {
@@ -34,14 +31,14 @@ public class FirebaseUtil {
     private static final int RC_SIGN_IN=123;
     public static FirebaseStorage mStorage;
     public static StorageReference mStorageRef;
-    private static ListActivity Caller;
+    private static UserActivity Caller;
     public static boolean isAdmin;
     private static String ADMINS_KEY="administrators";
     private static String STORAGE_FOLDER="deals_pictures";
 
     private FirebaseUtil(){}
 
-    public static void openFbReference(String ref, final mo.gacs.challenge2.travelmantics.Activities.ListActivity callerActivity){
+    public static void openFbReference(String ref, final UserActivity callerActivity){
         if (firebaseUtil==null){
             firebaseUtil=new FirebaseUtil();
             mFirebaseDatabase=FirebaseDatabase.getInstance();

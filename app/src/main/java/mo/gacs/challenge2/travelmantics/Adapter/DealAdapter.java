@@ -2,9 +2,11 @@ package mo.gacs.challenge2.travelmantics.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,13 +24,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import mo.gacs.challenge2.travelmantics.Activities.DealActivity;
-import mo.gacs.challenge2.travelmantics.Activities.ListActivity;
+import mo.gacs.challenge2.travelmantics.Activities.AdminActivity;
+import mo.gacs.challenge2.travelmantics.Activities.UserActivity;
 import mo.gacs.challenge2.travelmantics.FirebaseUtil;
 import mo.gacs.challenge2.travelmantics.Models.TravelDeal;
 import mo.gacs.challenge2.travelmantics.R;
 
-import static mo.gacs.challenge2.travelmantics.Activities.DealActivity.MainRef;
+import static mo.gacs.challenge2.travelmantics.Activities.AdminActivity.MainRef;
 
 public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder>{
 
@@ -39,10 +41,14 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
     private ChildEventListener mChildListener;
     private ImageView imageDeal;
     public static String Deal_KEY="Deal";
+    private String BACKGROUND_COLOR="#b4dce4";
+    UserActivity activity;
+    private String FAKE_PATH=null;
 
 
-    public DealAdapter(ListActivity caller) {
+    public DealAdapter(UserActivity caller) {
         FirebaseUtil.openFbReference(MainRef, caller);
+        activity=caller;
         mFirebaseDatabase=FirebaseUtil.mFirebaseDatabase;
         mDatabaseReference=FirebaseUtil.mDatabaseReference;
         deals=FirebaseUtil.mDeals;
@@ -127,10 +133,11 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
             int position=getAdapterPosition();
             Log.d("Click:", String.valueOf(position));
             TravelDeal selectedDeal=deals.get(position);
-            Intent intent=new Intent(v.getContext(), DealActivity.class);
+            Intent intent=new Intent(v.getContext(), AdminActivity.class);
             intent.putExtra(Deal_KEY,selectedDeal);
             v.getContext().startActivity(intent);
         }
+
 
         private void showImage(String url){
             if (url!=null&&url.isEmpty()==false){
@@ -139,6 +146,13 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
                         .resize(250, 250)
                         .centerCrop()
                         .into(imageDeal);
+            }else {
+                FAKE_PATH = "PlaPlaPla";
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    imageDeal.setBackground(imageDeal.getContext().getDrawable(R.drawable.bg_image));
+                } else {
+                    //
+                }
             }
         }
     }
